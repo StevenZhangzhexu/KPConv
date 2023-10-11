@@ -32,7 +32,7 @@ import torch
 from datasets.ModelNet40 import *
 from datasets.S3DIS import *
 from datasets.SemanticKitti import *
-from datasets.toronto3d import *
+from datasets.Toronto3D import *
 from torch.utils.data import DataLoader
 
 from utils.config import Config
