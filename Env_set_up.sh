@@ -8,7 +8,7 @@ conda activate kpconv-pt
 # conda install -c anaconda cudnn=7.6
 sudo apt update
 sudo apt install python3-dev python3-pip python3-tk
-#PyTorch 1.4.0
+#PyTorch 1.6.0
 #conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch
 #conda install -c pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch -c conda-forge
 pip install torch==1.4.0 torchvision==0.5.0 -f https://download.pytorch.org/whl/cu117/torch_stable.html

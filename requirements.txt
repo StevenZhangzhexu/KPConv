@@ -3,6 +3,6 @@ scikit-learn
 PyYAML
 matplotlib
 #mayavi
-PyQt5
+#PyQt5
 
 
