@@ -70,7 +70,7 @@ class ModelTester:
         # Load previous checkpoint
         ##########################
 
-        checkpoint = torch.load(chkp_path)
+        checkpoint = torch.load(chkp_path,map_location='cuda:0')
         net.load_state_dict(checkpoint['model_state_dict'])
         self.epoch = checkpoint['epoch']
         net.eval()

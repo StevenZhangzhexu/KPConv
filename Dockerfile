@@ -123,18 +123,29 @@ FROM nvidia/cuda:11.1.1-devel-ubuntu20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Start from clean distro with proper Timezone
-RUN apt-get update && apt-get dist-upgrade -y && apt-get autoremove \
-    && apt-get install -y --no-install-recommends tzdata \
+RUN apt-get update 
+RUN apt-get dist-upgrade -y 
+RUN apt-get autoremove
+    
+RUN apt-get install -y --no-install-recommends tzdata \
     && ln -fs /usr/share/zoneinfo/Asia/Singapore /etc/localtime \
     && dpkg-reconfigure --frontend noninteractive tzdata
 
+
+# RUN apt-get update
+# RUN apt-get install -y nvidia-container-toolkit
 # General packages needed by the other build steps
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils debconf-utils bash lsb-release
-RUN apt-get update && apt-get install -y --no-install-recommends git openssh-client ca-certificates gnupg curl wget file
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends apt-utils debconf-utils bash lsb-release
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends git openssh-client ca-certificates gnupg curl wget file
 
 # Python Python and python extensions
-RUN apt-get clean && apt-get update && apt-get install -y apt-transport-https
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get clean 
+RUN apt-get update 
+RUN apt-get install -y apt-transport-https
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends \
     gcc \
     ninja-build \
     python3-dev \
@@ -151,14 +162,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set bash the default shell
 SHELL ["/bin/bash", "-c"]
 
-RUN pip3 install numpy
-RUN pip3 install -U scikit-learn
+# RUN pip3 install numpy
+# RUN pip3 install -U scikit-learn
 RUN pip3 install configparser pandas tqdm
 RUN pip3 install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html
 
-RUN pip3 install numpy 
-RUN pip3 install scikit-learn 
+RUN pip3 install numpy ==1.19.5
+RUN pip3 install scikit-learn ==0.24.0
 RUN pip3 install PyYAML 
 RUN pip3 install matplotlib 
-# RUN pip3 install PyQt5
-# RUN pip3 install mayavi
+#RUN pip3 install pyqt5
+RUN pip3 install mayavi
+
+RUN apt-get update && apt-get install libgl1
