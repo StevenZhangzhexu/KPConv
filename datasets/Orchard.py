@@ -66,29 +66,19 @@ class OrchardDataset(PointCloudDataset):
 
         # Dict from labels to names
         self.label_to_names = {
-            'human.pedestrian.adult': 'pedestrian',
-            'human.pedestrian.child': 'pedestrian',
-            'human.pedestrian.wheelchair': 'ignore',
-            'human.pedestrian.stroller': 'ignore',
-            'human.pedestrian.personal_mobility': 'ignore',
-            'human.pedestrian.police_officer': 'pedestrian',
-            'human.pedestrian.construction_worker': 'pedestrian',
-            'animal': 'ignore',
-            'vehicle.car': 'car',
-            'vehicle.motorcycle': 'motorcycle',
-            'vehicle.bicycle': 'bicycle',
-            'vehicle.bus.bendy': 'bus',
-            'vehicle.bus.rigid': 'bus',
-            'vehicle.truck': 'truck',
-            'vehicle.construction': 'construction_vehicle',
-            'vehicle.emergency.ambulance': 'ignore',
-            'vehicle.emergency.police': 'ignore',
-            'vehicle.trailer': 'trailer',
-            'movable_object.barrier': 'barrier',
-            'movable_object.trafficcone': 'traffic_cone',
-            'movable_object.pushable_pullable': 'ignore',
-            'movable_object.debris': 'ignore',
-            'static_object.bicycle_rack': 'ignore',
+                        0: 'Bollard',
+                        1: 'Building',
+                        2: 'Bus Stop',
+                        3: 'Control Box',
+                        4: 'Ground',
+                        5: 'Lamp Post',
+                        6: 'Pole',
+                        7: 'Railing',
+                        8: 'Road',
+                        9: 'Shrub',
+                        10: 'Sign',
+                        11: 'Solar Panel',
+                        12: 'Tree'
         }
 
         # Initialize a bunch of variables concerning class labels
