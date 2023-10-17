@@ -183,7 +183,7 @@ if __name__ == '__main__':
     elif config.dataset == 'Orchard':
         test_dataset = OrchardDataset(config, set='validation', use_potentials=True)
         test_sampler = OrchardSampler(test_dataset)
-        collate_fn = Toronto3DCollate
+        collate_fn = OrchardCollate
     else:
         raise ValueError('Unsupported dataset : ' + config.dataset)
 
