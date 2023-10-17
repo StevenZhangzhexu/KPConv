@@ -33,6 +33,7 @@ from datasets.ModelNet40 import *
 from datasets.S3DIS import *
 from datasets.SemanticKitti import *
 from datasets.Toronto3D import *
+from datasets.Orchard import *
 from torch.utils.data import DataLoader
 
 from utils.config import Config
@@ -179,6 +180,10 @@ if __name__ == '__main__':
         test_dataset = SemanticKittiDataset(config, set=set, balance_classes=False)
         test_sampler = SemanticKittiSampler(test_dataset)
         collate_fn = SemanticKittiCollate
+    elif config.dataset == 'Orchard':
+        test_dataset = OrchardDataset(config, set='validation', use_potentials=True)
+        test_sampler = OrchardSampler(test_dataset)
+        collate_fn = Toronto3DCollate
     else:
         raise ValueError('Unsupported dataset : ' + config.dataset)
 

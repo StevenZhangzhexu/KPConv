@@ -1162,7 +1162,7 @@ class OrchardSampler(Sampler):
             target_b = self.dataset.config.batch_num
             
             # Expected batch size order of magnitude
-            expected_N = 100000
+            expected_N = 10000
 
             # Calibration parameters. Higher means faster but can also become unstable
             # Reduce Kp and Kd if your GP Uis small as the total number of points per batch will be smaller 
