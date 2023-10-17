@@ -167,16 +167,28 @@ SHELL ["/bin/bash", "-c"]
 RUN pip3 install configparser pandas tqdm
 RUN pip3 install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html
 
-RUN pip3 install numpy==1.19.5
-RUN pip3 install scikit-learn ==0.24.0
+RUN pip3 install numpy==1.19.5 
+RUN pip3 install scikit-learn==0.24.0
 RUN pip3 install PyYAML 
 RUN pip3 install matplotlib 
-#RUN pip3 install pyqt5
 RUN pip3 install mayavi
-RUN pip3 install open3d
+RUN pip3 install laspy[lazrs,laszip]
+# RUN pip3 install open3d
 
+# Install Open3D system dependencies and pip
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    libegl1 \
+    libgl1 \
+    libgomp1 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Open3D from the PyPI repositories
+RUN python3 -m pip install --no-cache-dir --upgrade pip && \
+    python3 -m pip install --no-cache-dir --upgrade open3d
 
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y
 RUN apt-get update && apt-get install libgl1
+RUN pip3 install pyqt5
 

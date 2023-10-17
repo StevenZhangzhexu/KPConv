@@ -30,7 +30,7 @@ import torch
 import math
 import warnings
 from multiprocessing import Lock
-
+import laspy
 
 # OS functions
 from os import listdir
@@ -113,8 +113,9 @@ class OrchardDataset(PointCloudDataset):
         ply_path = join(self.path, self.train_path)
 
         # Proportion of validation scenes
-        self.cloud_names = ['Area_1', 'Area_2', 'Area_3', 'Area_4', 'Area_5', 'Area_6']
-        self.all_splits = [0, 1, 2, 3, 4, 5]
+        self.cloud_names = ['Orchard_0913_labelled_A','Orchard_0913_labelled_B','Orchard_0913_labelled_C',\
+                            'Orchard_0913_labelled_D','Orchard_0913_labelled_E']
+        self.all_splits = [0, 1, 2, 3, 4]
         self.validation_split = 4
 
         # Number of models used per epoch
@@ -657,59 +658,21 @@ class OrchardDataset(PointCloudDataset):
             if exists(cloud_file):
                 continue
 
-            # Get rooms of the current cloud
-            cloud_folder = join(self.path, cloud_name)
-            room_folders = [join(cloud_folder, room) for room in listdir(cloud_folder) if isdir(join(cloud_folder, room))]
+            print('\nPreparing ply for cloud {:s}\n'.format(cloud_name))
 
-            # Initiate containers
-            cloud_points = np.empty((0, 3), dtype=np.float32)
-            cloud_colors = np.empty((0, 3), dtype=np.uint8)
-            cloud_classes = np.empty((0, 1), dtype=np.int32)
+            point_cloud = laspy.read(join(self.path, cloud_name + '.laz'))
 
-            # Loop over rooms
-            for i, room_folder in enumerate(room_folders):
+            cloud_points = np.vstack((point_cloud['x'], point_cloud['y'], point_cloud['z'])).T.astype(np.float32)
+            color = np.vstack((point_cloud['red'], point_cloud['green'], point_cloud['blue'])).T.astype(np.uint8)
+            intensity = point_cloud['intensity'].astype(np.uint8)
+            cloud_colors_intensity = np.hstack((color, intensity.reshape(-1, 1)))
+            cloud_classes = point_cloud['label'].astype(np.uint8)
 
-                print('Cloud %s - Room %d/%d : %s' % (cloud_name, i+1, len(room_folders), room_folder.split('/')[-1]))
-
-                for object_name in listdir(join(room_folder, 'Annotations')):
-
-                    if object_name[-4:] == '.txt':
-
-                        # Text file containing point of the object
-                        object_file = join(room_folder, 'Annotations', object_name)
-
-                        # Object class and ID
-                        tmp = object_name[:-4].split('_')[0]
-                        if tmp in self.name_to_label:
-                            object_class = self.name_to_label[tmp]
-                        elif tmp in ['stairs']:
-                            object_class = self.name_to_label['clutter']
-                        else:
-                            raise ValueError('Unknown object name: ' + str(tmp))
-
-                        # Correct bug in Orchard dataset
-                        if object_name == 'ceiling_1.txt':
-                            with open(object_file, 'r') as f:
-                                lines = f.readlines()
-                            for l_i, line in enumerate(lines):
-                                if '103.0\x100000' in line:
-                                    lines[l_i] = line.replace('103.0\x100000', '103.000000')
-                            with open(object_file, 'w') as f:
-                                f.writelines(lines)
-
-                        # Read object points and colors
-                        object_data = np.loadtxt(object_file, dtype=np.float32)
-
-                        # Stack all data
-                        cloud_points = np.vstack((cloud_points, object_data[:, 0:3].astype(np.float32)))
-                        cloud_colors = np.vstack((cloud_colors, object_data[:, 3:6].astype(np.uint8)))
-                        object_classes = np.full((object_data.shape[0], 1), object_class, dtype=np.int32)
-                        cloud_classes = np.vstack((cloud_classes, object_classes))
 
             # Save as ply
             write_ply(cloud_file,
-                      (cloud_points, cloud_colors, cloud_classes),
-                      ['x', 'y', 'z', 'red', 'green', 'blue', 'class'])
+                      (cloud_points, cloud_colors_intensity, cloud_classes),
+                      ['x', 'y', 'z', 'red', 'green', 'blue', 'intensity', 'class'])
 
         print('Done in {:.1f}s'.format(time.time() - t0))
         return

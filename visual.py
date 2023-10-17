@@ -11,6 +11,7 @@ def visualize_ply(ply_file):
 
     # Add the point cloud to the visualization
     vis.add_geometry(cloud)
+    # o3d.visualization.draw_plotly(cloud)
 
     # Set the view control
     vis.get_render_option().point_size = 1
@@ -24,9 +25,4 @@ def visualize_ply(ply_file):
 
 # Example usage
 ply_file = "test/Light_KPFCNN/predictions/Area_5.ply"
-# ply_file = '/Users/matiurrahmanminar/Documents/Minar/AlteredVerse/Research/data/av_buildings/11_AUSM/NHB_AUSM.ply'
-# ply_file = "/Users/matiurrahmanminar/Documents/Minar/AlteredVerse/Research/Output/Takashimaya-pcd-Nerfacto/point_cloud.ply"
-# ply_file = "../sunyatseng-pcd-mesh/sunyatseng-pcd-nerfacto/point_cloud.ply"
-# ply_file = "../sunyatseng-pcd-mesh/sunyatseng-mesh-nerfacto/poisson_mesh.ply"
-# ply_file = "../samples/YFKK_Right_Small_Lion_Statue.ply"
 visualize_ply(ply_file)
