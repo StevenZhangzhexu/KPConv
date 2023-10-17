@@ -107,7 +107,7 @@ class OrchardDataset(PointCloudDataset):
         self.use_potentials = use_potentials
 
         # Path of the training files
-        self.train_path = 'original_ply'
+        self.train_path = 'train'
 
         # List of files to process
         ply_path = join(self.path, self.train_path)
@@ -116,7 +116,7 @@ class OrchardDataset(PointCloudDataset):
         self.cloud_names = ['Orchard_0913_labelled_A','Orchard_0913_labelled_B','Orchard_0913_labelled_C',\
                             'Orchard_0913_labelled_D','Orchard_0913_labelled_E']
         self.all_splits = [0, 1, 2, 3, 4]
-        self.validation_split = 4
+        self.validation_split = 3
 
         # Number of models used per epoch
         if self.set == 'training':
@@ -247,6 +247,16 @@ class OrchardDataset(PointCloudDataset):
         t = [time.time()]
 
         # Initiate concatanation lists
+        '''
+        p_list = []   => input points (N, 3) float array
+        f_list = []    => input features (N, D) float array
+        l_list = []    => input labels (N,) int array
+        pi_list = []  => indices of the points inside the input sphere (N,) int array
+        i_list = []    => index of the point chosen as center of the input sphere (integer)
+        ci_list = []  => index of the pointcloud where the input is picked (integer)
+        s_list = []   => augmentation scale applied to the input points (float or 3 floats if anysotropic scale)
+        R_list = []  => augmentation rotation applied to the input points (3 by 3 matrix)
+        '''
         p_list = []
         f_list = []
         l_list = []
@@ -666,7 +676,7 @@ class OrchardDataset(PointCloudDataset):
             color = np.vstack((point_cloud['red'], point_cloud['green'], point_cloud['blue'])).T.astype(np.uint8)
             intensity = point_cloud['intensity'].astype(np.uint8)
             cloud_colors_intensity = np.hstack((color, intensity.reshape(-1, 1)))
-            cloud_classes = point_cloud['label'].astype(np.uint8)
+            cloud_classes = point_cloud['label'].astype(np.int32)
 
 
             # Save as ply
@@ -709,7 +719,7 @@ class OrchardDataset(PointCloudDataset):
 
                 # read ply with data
                 data = read_ply(sub_ply_file)
-                sub_colors = np.vstack((data['red'], data['green'], data['blue'])).T
+                sub_colors = np.vstack((data['red'], data['green'], data['blue'], data['intensity'])).T
                 sub_labels = data['class']
 
                 # Read pkl with search tree
@@ -722,8 +732,10 @@ class OrchardDataset(PointCloudDataset):
                 # Read ply file
                 data = read_ply(file_path)
                 points = np.vstack((data['x'], data['y'], data['z'])).T
+                points = np.asarray(points, dtype=np.float32)
                 colors = np.vstack((data['red'], data['green'], data['blue'])).T
-                labels = data['class']
+                colors = np.asarray(colors, dtype=np.float32)
+                labels = np.array(data['class'], dtype=np.int32)
 
                 # Subsample cloud
                 sub_points, sub_colors, sub_labels = grid_subsampling(points,
@@ -834,7 +846,7 @@ class OrchardDataset(PointCloudDataset):
                 else:
                     data = read_ply(file_path)
                     points = np.vstack((data['x'], data['y'], data['z'])).T
-                    labels = data['class']
+                    labels = np.array(data['class'], dtype=np.int32)
 
                     # Compute projection inds
                     idxs = self.input_trees[i].query(points, return_distance=False)
@@ -869,7 +881,7 @@ class OrchardDataset(PointCloudDataset):
 
 
 class OrchardSampler(Sampler):
-    """Sampler for Orchard"""
+    """Sampler for Orchard (with additional features)"""
 
     def __init__(self, dataset: OrchardDataset):
         Sampler.__init__(self, dataset)
