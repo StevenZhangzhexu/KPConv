@@ -96,10 +96,10 @@ class OrchardConfig(Config):
     num_kernel_points = 15
 
     # Radius of the input sphere (decrease value to reduce memory cost)
-    in_radius = 1.2
+    in_radius = 3.0
 
     # Size of the first subsampling grid in meter (increase value to reduce memory cost)
-    first_subsampling_dl = 0.03
+    first_subsampling_dl = 0.08
 
     # Radius of convolution in "number grid cell". (2.5 is the standard value)
     conv_radius = 2.5
@@ -108,7 +108,7 @@ class OrchardConfig(Config):
     deform_radius = 5.0
 
     # Radius of the area of influence of each kernel point in "number grid cell". (1.0 is the standard value)
-    KP_extent = 1.2
+    KP_extent = 1.0
 
     # Behavior of convolutions in ('constant', 'linear', 'gaussian')
     KP_influence = 'linear'
