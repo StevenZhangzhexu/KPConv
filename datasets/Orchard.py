@@ -116,7 +116,7 @@ class OrchardDataset(PointCloudDataset):
         self.cloud_names = ['Orchard_0913_labelled_A','Orchard_0913_labelled_B','Orchard_0913_labelled_C',\
                             'Orchard_0913_labelled_D','Orchard_0913_labelled_E']
         self.all_splits = [0, 1, 2, 3, 4]
-        self.validation_split = 3
+        self.validation_split = 4
 
         # Number of models used per epoch
         if self.set == 'training':
@@ -711,7 +711,7 @@ class OrchardDataset(PointCloudDataset):
 
             # Name of the input files
             KDTree_file = join(tree_path, '{:s}_KDTree.pkl'.format(cloud_name))
-            sub_ply_file = join(tree_path, '{:s}.ply'.format(cloud_name))
+            sub_ply_file = join(self.path, self.train_path, '{:s}.ply'.format(cloud_name))
 
             # Check if inputs have already been computed
             if exists(KDTree_file):
@@ -733,7 +733,7 @@ class OrchardDataset(PointCloudDataset):
                 data = read_ply(file_path)
                 points = np.vstack((data['x'], data['y'], data['z'])).T
                 points = np.asarray(points, dtype=np.float32)
-                colors = np.vstack((data['red'], data['green'], data['blue'])).T
+                colors = np.vstack((data['red'], data['green'], data['blue'], data['intensity'])).T
                 colors = np.asarray(colors, dtype=np.float32)
                 labels = np.array(data['class'], dtype=np.int32)
 
@@ -1174,7 +1174,7 @@ class OrchardSampler(Sampler):
             target_b = self.dataset.config.batch_num
             
             # Expected batch size order of magnitude
-            expected_N = 10000
+            expected_N = 100000
 
             # Calibration parameters. Higher means faster but can also become unstable
             # Reduce Kp and Kd if your GP Uis small as the total number of points per batch will be smaller 

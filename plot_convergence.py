@@ -40,6 +40,7 @@ from utils.ply import read_ply
 from datasets.ModelNet40 import ModelNet40Dataset
 from datasets.S3DIS import S3DISDataset
 from datasets.SemanticKitti import SemanticKittiDataset
+from datasets.Orchard import OrchardDataset
 
 # ----------------------------------------------------------------------------------------------------------------------
 #
@@ -668,7 +669,7 @@ def compare_convergences_SLAM(dataset, list_of_paths, list_of_names=None):
     ax.grid(linestyle='-.', which='both')
     #ax.set_yticks(np.arange(0.8, 1.02, 0.02))
 
-    displayed_classes = [0, 1, 2, 3, 4, 5, 6, 7]
+    displayed_classes = [0, 1, 2, 3, 4, 5, 6, 7, 8 ,9 ,10, 11, 12]
     #displayed_classes = []
     for c_i, c_name in enumerate(class_list):
         if c_i in displayed_classes:
@@ -713,8 +714,8 @@ def experiment_name_1():
     """
 
     # Using the dates of the logs, you can easily gather consecutive ones. All logs should be of the same dataset.
-    start = 'Log_2020-04-22_11-52-58'
-    end = 'Log_2023-07-29_12-40-27'
+    start = 'Log_2023-10-18_17-09-56'
+    end = 'Log_2023-10-19_17-17-26'
 
     # Name of the result path
     res_path = 'results'
@@ -814,6 +815,9 @@ if __name__ == '__main__':
     elif config.dataset_task == 'cloud_segmentation':
         if config.dataset.startswith('S3DIS'):
             dataset = S3DISDataset(config, load_data=False)
+            compare_convergences_segment(dataset, logs, logs_names)
+        elif config.dataset.startswith('Orchard'):
+            dataset = OrchardDataset(config, load_data=False)
             compare_convergences_segment(dataset, logs, logs_names)
     elif config.dataset_task == 'slam_segmentation':
         if config.dataset.startswith('SemanticKitti'):
