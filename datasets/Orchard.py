@@ -759,7 +759,7 @@ class OrchardDataset(PointCloudDataset):
                 # Save ply
                 write_ply(sub_ply_file,
                           [sub_points, sub_colors, sub_labels],
-                          ['x', 'y', 'z', 'red', 'green', 'blue', 'class'])
+                          ['x', 'y', 'z', 'red', 'green', 'blue', 'intensity', 'class'])
 
             # Fill data containers
             self.input_trees += [search_tree]

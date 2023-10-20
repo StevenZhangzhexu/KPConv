@@ -31,6 +31,7 @@ import torch
 # Dataset
 from datasets.ModelNet40 import *
 from datasets.S3DIS import *
+from datasets.Orchard import *
 from torch.utils.data import DataLoader
 
 from utils.config import Config
@@ -94,7 +95,7 @@ if __name__ == '__main__':
     #       > 'last_XXX': Automatically retrieve the last trained model on dataset XXX
     #       > 'results/Log_YYYY-MM-DD_HH-MM-SS': Directly provide the path of a trained model
 
-    chosen_log = 'results/Light_KPFCNN'
+    chosen_log = 'results/Log_2023-10-19_17-17-26'
 
     # Choose the index of the checkpoint to load OR None if you want to load the current checkpoint
     chkp_idx = None
@@ -162,6 +163,10 @@ if __name__ == '__main__':
         test_dataset = S3DISDataset(config, set='validation', use_potentials=True)
         test_sampler = S3DISSampler(test_dataset)
         collate_fn = S3DISCollate
+    elif config.dataset == 'Orchard':
+        test_dataset = OrchardDataset(config, set='validation', use_potentials=True)
+        test_sampler = OrchardSampler(test_dataset)
+        collate_fn = OrchardCollate
     else:
         raise ValueError('Unsupported dataset : ' + config.dataset)
 
