@@ -2,7 +2,7 @@ numpy
 scikit-learn==0.24.2
 PyYAML
 matplotlib
-#mayavi
+mayavi
 #PyQt5
 
 
