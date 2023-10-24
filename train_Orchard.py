@@ -74,11 +74,16 @@ class OrchardConfig(Config):
                     'resnetb',
                     'resnetb',
                     'resnetb_strided',
-                    'resnetb_deformable',
-                    'resnetb_deformable',
-                    'resnetb_deformable_strided',
-                    'resnetb_deformable',
-                    'resnetb_deformable',
+                    # 'resnetb_deformable',
+                    # 'resnetb_deformable',
+                    # 'resnetb_deformable_strided',
+                    # 'resnetb_deformable',
+                    # 'resnetb_deformable',
+                    'resnetb',
+                    'resnetb',
+                    'resnetb_strided',
+                    'resnetb',
+                    'resnetb',
                     'nearest_upsample',
                     'unary',
                     'nearest_upsample',
@@ -114,7 +119,8 @@ class OrchardConfig(Config):
     KP_influence = 'linear'
 
     # Aggregation function of KPConv in ('closest', 'sum')
-    aggregation_mode = 'sum'
+    #aggregation_mode = 'sum'
+    aggregation_mode = 'closest'
 
     # Choice of input features
     first_features_dim = 128
@@ -175,7 +181,7 @@ class OrchardConfig(Config):
     #   > 'batch': Each cloud in the batch has the same contribution (points are weighted according cloud sizes)
     segloss_balance = 'none'
 
-    # Do we nee to save convergence
+    # Do we need to save convergence
     saving = True
     saving_path = None
 
@@ -242,8 +248,8 @@ if __name__ == '__main__':
         config.saving_path = sys.argv[1]
 
     # Initialize datasets
-    training_dataset = OrchardDataset(config, set='training', use_potentials=True)
-    test_dataset = OrchardDataset(config, set='validation', use_potentials=True)
+    training_dataset = OrchardDataset(config, set='training', use_potentials=False)
+    test_dataset = OrchardDataset(config, set='validation', use_potentials=False)
 
     # Initialize samplers
     training_sampler = OrchardSampler(training_dataset)
@@ -303,3 +309,6 @@ if __name__ == '__main__':
 
     print('Forcing exit now')
     os.kill(os.getpid(), signal.SIGINT)
+
+    end = time.time()
+    print(time.strftime("%H:%M:%S", time.gmtime(end - start)))

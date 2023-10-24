@@ -47,24 +47,26 @@ def o3d_viz(cloud, annotated=False):
         pcd.colors = o3d.utility.Vector3dVector(colors / 255.0)  # Normalize colors to [0, 1]
 
     # Visualize the merged point cloud with colors
-    o3d.visualization.draw_geometries([pcd])
-    # o3d.visualization.draw_plotly([pcd])
+    # o3d.visualization.draw_geometries([pcd])
+    o3d.visualization.draw_plotly([pcd])
 
 if __name__ == '__main__':
-    # Load the .las file
-    input_file = '../../Data/Orchard/Orchard_0913_labelled_B.laz'
-    point_cloud = laspy.read(input_file)
-    print(point_cloud.x)
-    #print(np.unique(point_cloud.segment_id))
+    # Load all the .las file
+    ls = ['A','B','C','D','E']
+    input_file_ls = [f'../../Data/Orchard/Orchard_0913_labelled_{i}.laz' for i in ls]
+    for input_file in input_file_ls:
+        point_cloud = laspy.read(input_file)
+        print(point_cloud.x)
+        #print(np.unique(point_cloud.segment_id))
 
-    # lists column names in las file.
-    point_format = point_cloud.point_format
-    print(list(point_format.dimension_names))
+        # lists column names in las file.
+        point_format = point_cloud.point_format
+        print(list(point_format.dimension_names))
 
-    for each in list(point_format.dimension_names):
-        print(each, np.min(point_cloud[each]), np.mean(point_cloud[each]), np.max(point_cloud[each]))
+        for each in list(point_format.dimension_names):
+            print(each, np.min(point_cloud[each]), np.mean(point_cloud[each]), np.max(point_cloud[each]))
 
-    # vis_open3d
-    # o3d_viz(point_cloud, annotated=False)
-    o3d_viz(point_cloud, annotated=True)
+        # vis_open3d
+        # o3d_viz(point_cloud, annotated=False)
+        o3d_viz(point_cloud, annotated=True)
     

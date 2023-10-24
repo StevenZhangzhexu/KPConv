@@ -682,7 +682,7 @@ class OrchardDataset(PointCloudDataset):
             # Save as ply
             write_ply(cloud_file,
                       (cloud_points, cloud_colors_intensity, cloud_classes),
-                      ['x', 'y', 'z', 'red', 'green', 'blue', 'intensity', 'class'])
+                      ['x', 'y', 'z', 'red', 'green', 'blue', 'intensity', 'label'])
 
         print('Done in {:.1f}s'.format(time.time() - t0))
         return
@@ -720,7 +720,7 @@ class OrchardDataset(PointCloudDataset):
                 # read ply with data
                 data = read_ply(sub_ply_file)
                 sub_colors = np.vstack((data['red'], data['green'], data['blue'], data['intensity'])).T
-                sub_labels = data['class']
+                sub_labels = data['label']
 
                 # Read pkl with search tree
                 with open(KDTree_file, 'rb') as f:
@@ -735,7 +735,7 @@ class OrchardDataset(PointCloudDataset):
                 points = np.asarray(points, dtype=np.float32)
                 colors = np.vstack((data['red'], data['green'], data['blue'], data['intensity'])).T
                 colors = np.asarray(colors, dtype=np.float32)
-                labels = np.array(data['class'], dtype=np.int32)
+                labels = np.array(data['label'], dtype=np.int32)
 
                 # Subsample cloud
                 sub_points, sub_colors, sub_labels = grid_subsampling(points,
@@ -759,7 +759,7 @@ class OrchardDataset(PointCloudDataset):
                 # Save ply
                 write_ply(sub_ply_file,
                           [sub_points, sub_colors, sub_labels],
-                          ['x', 'y', 'z', 'red', 'green', 'blue', 'intensity', 'class'])
+                          ['x', 'y', 'z', 'red', 'green', 'blue', 'intensity', 'label'])
 
             # Fill data containers
             self.input_trees += [search_tree]
@@ -846,7 +846,7 @@ class OrchardDataset(PointCloudDataset):
                 else:
                     data = read_ply(file_path)
                     points = np.vstack((data['x'], data['y'], data['z'])).T
-                    labels = np.array(data['class'], dtype=np.int32)
+                    labels = np.array(data['label'], dtype=np.int32)
 
                     # Compute projection inds
                     idxs = self.input_trees[i].query(points, return_distance=False)
@@ -977,7 +977,7 @@ class OrchardSampler(Sampler):
     def fast_calib(self):
         """
         This method calibrates the batch sizes while ensuring the potentials are well initialized. Indeed on a dataset
-        like Semantic3D, before potential have been updated over the dataset, there are cahnces that all the dense area
+        like Semantic3D, before potential have been updated over the dataset, there are chances that all the dense area
         are picked in the begining and in the end, we will have very large batch of small point clouds
         :return:
         """
@@ -1174,7 +1174,7 @@ class OrchardSampler(Sampler):
             target_b = self.dataset.config.batch_num
             
             # Expected batch size order of magnitude
-            expected_N = 100000
+            expected_N = 10000
 
             # Calibration parameters. Higher means faster but can also become unstable
             # Reduce Kp and Kd if your GP Uis small as the total number of points per batch will be smaller 

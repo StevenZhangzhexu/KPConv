@@ -132,8 +132,8 @@ RUN apt-get install -y --no-install-recommends tzdata \
     && dpkg-reconfigure --frontend noninteractive tzdata
 
 
-# RUN apt-get update
-# RUN apt-get install -y nvidia-container-toolkit
+RUN apt-get update
+RUN apt-get install -y nvidia-container-toolkit
 # General packages needed by the other build steps
 RUN apt-get update 
 RUN apt-get install -y --no-install-recommends apt-utils debconf-utils bash lsb-release
