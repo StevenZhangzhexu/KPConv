@@ -33,7 +33,7 @@ from multiprocessing import Lock
 import laspy
 
 # OS functions
-from os import listdir
+from os import listdir, makedirs
 from os.path import exists, join, isdir
 
 # Dataset parent class
@@ -172,6 +172,7 @@ class OrchardDataset(PointCloudDataset):
         self.validation_labels = []
 
         # Start loading
+        # remove subsampling for validation to show original prediction
         self.load_subsampled_clouds()
 
         ############################
@@ -678,7 +679,10 @@ class OrchardDataset(PointCloudDataset):
             cloud_colors_intensity = np.hstack((color, intensity.reshape(-1, 1)))
             cloud_classes = point_cloud['label'].astype(np.int32)
 
-
+            # # debug
+            # assert len(cloud_points)== len(color)== len(intensity)== len(cloud_colors_intensity)== len(cloud_classes), \
+            # 'data attributes missing'
+            
             # Save as ply
             write_ply(cloud_file,
                       (cloud_points, cloud_colors_intensity, cloud_classes),

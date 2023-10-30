@@ -5,6 +5,7 @@ matplotlib
 #mayavi
 laspy[lazrs,laszip]
 open3d
+plyfile
 #PyQt5
 
 

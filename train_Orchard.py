@@ -249,7 +249,7 @@ if __name__ == '__main__':
 
     # Initialize datasets
     training_dataset = OrchardDataset(config, set='training', use_potentials=True)
-    test_dataset = OrchardDataset(config, set='validation', use_potentials=False)
+    test_dataset = OrchardDataset(config, set='validation', use_potentials=True)
 
     # Initialize samplers
     training_sampler = OrchardSampler(training_dataset)

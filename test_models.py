@@ -98,8 +98,10 @@ if __name__ == '__main__':
     #       > '(old_)results/Log_YYYY-MM-DD_HH-MM-SS': Directly provide the path of a trained model
 
     chosen_log = \
-    'results/Log_2023-10-24_07-33-33'
-    # 'results/Log_2023-10-18_17-09-56' 
+    'results/Log_2023-10-27_03-43-46'
+    #'results/Log_2023-10-24_07-31-05'
+    # 'results/Log_2023-10-24_07-33-33'
+
 
     # Choose the index of the checkpoint to load OR None if you want to load the current checkpoint
     chkp_idx = -1
